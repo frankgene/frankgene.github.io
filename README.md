@@ -1,316 +1,280 @@
-该文档介绍了一个实用的空间转录组学3D可视化工具，MAPS-Explore。它涵盖了项目管理、数据管理、2D可视化、切片对齐、3D可视化等多项功能。用户在使用该界面前应当首先安装并启动后台应用，然后通过前端浏览器访问。
+This document introduces a practical spatial transcriptomics 3D visualization tool, MAPS-Explore. It covers project management, data management, 2D visualization, slice alignment, 3D visualization, and many other features. Before using this interface, users should first install and start the backend application, and then access it through a frontend browser.
 
-# 1、安装MAPS-Explore
-等待正式出版后开放。
+# 1. Install MAPS-Explore
+Will be made publicly available after the official publication.
 
-# 2、启动后台应用
-安装完成后进入应用目录，此时你有两种选择：
+# 2. Start the Backend Application
+After installation, enter the application directory. At this point, you have two options:
 
-## （1）编辑模式
-该模式支持全部功能，包括创建、销毁项目，上传或下载切片数据，运行对齐任务，以及项目参数配置等。使用以下命令启动：
+## (1) Edit Mode
+This mode supports all features, including creating and destroying projects, uploading or downloading slice data, running alignment tasks, and project parameter configuration. Start with the following command:
 
 ```bash
 nohup python manage.py runserver 0.0.0.0:3000 &
 ```
 
-## （2）展示模式
-该模式仅支持项目加载、2D/3D可视化，不支持任何数据写入操作，适用于演示和分享结果。使用以下命令启动：
+## (2) Display Mode
+This mode only supports project loading and 2D/3D visualization; it does not support any data writing operations, making it suitable for demos and sharing results. Start with the following command:
 
 ```bash
 nohup python manage.py runserver 0.0.0.0:3000 --read-only &
 ```
 
-无论哪种模式，都会在当前文件夹下创建一个项目日志nohup.out，以便后续维护。上述启动命令默认在当前设备的3000端口开放服务，如果你的设备3000端口被占用了，请修改它，并且记得在浏览器中使用对应的端口访问。
+Regardless of the mode, a project log file `nohup.out` will be created in the current folder for subsequent maintenance. The startup commands above by default expose the service on port 3000 of the current device. If your device's port 3000 is occupied, please modify it, and remember to access it using the corresponding port in the browser.
 
-# 3、前端界面功能演示
-## （1）打开MAPS-Explore
-如果你在本地安装了MAPS-Explore，且本地有图形化操作界面和任意浏览器，那么请打开浏览器输入以下URL：
+# 3. Frontend Interface Feature Demonstration
+## (1) Open MAPS-Explore
+If you have MAPS-Explore installed locally, and your local machine has a graphical user interface and any browser, please open the browser and enter the following URL:
 
 ```bash
 http://127.0.0.1:3000/
 ```
 
-如果你在远程服务器中部署了MAPS-Explore，那请你配置好对应的防火墙开放端口名单，并使用以下URL：
+If you have deployed MAPS-Explore on a remote server, please configure the firewall to open the corresponding ports, and use the following URL:
 
 ```bash
 http://your_ip:3000/
 ```
 
-注意，如果你在docker容器中部署了MAPS-Explore或者你的MAPS-Explore项目需要被外网访问，你可能得通过端口转发来实现访问，此时你应该使用中间服务器的ip和对应端口。
+Note: If you have deployed MAPS-Explore in a Docker container, or your MAPS-Explore project needs to be accessed from the external network, you may need to implement access through port forwarding. In this case, you should use the IP and corresponding port of the intermediate server.
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783323239998-1d081ebd-7d9e-47d2-9f7c-12b1b4e81298.png)
 
-## （2）新建项目
-点击左上角的创建项目图标
+## (2) Create a New Project
+Click the create project icon in the upper left corner
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783323451493-2c7e44fc-5b44-4696-8460-e2856c1632df.png)
 
-在弹出窗口中填写项目名称和描述（可选），注意项目名称必须使用英文且不能有空格和特殊符号，否则会导致无法正确加载项目！
+Fill in the project name and description (optional) in the popup window. Note that the project name must be in English and cannot contain spaces or special symbols, otherwise the project will not be loaded correctly!
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783323409635-e572cb76-8eaf-44ed-8f90-6167396aaa8e.png)
 
-当右侧项目选项卡出现项目名称即创建成功
+When the project name appears in the right-side project tab, the creation is successful.
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783323581624-49b5980f-c5eb-4c57-aab8-14f2f22eaf7f.png)
 
-## （3）上传数据
-当前MAPS-Explore仅支持H5AD格式数据上传，且为了确保你的数据能被正常识别并加载，我们推荐使用基于anndata 0.12.11来处理并保存切片文件，其他版本我们并没有全部测试。通过点击左下角Upload按钮选择并上传数据：
+## (3) Upload Data
+Currently, MAPS-Explore only supports H5AD format data uploads. To ensure your data can be correctly recognized and loaded, we recommend using anndata 0.12.11 to process and save slice files; we have not fully tested other versions. Click the Upload button at the lower left corner to select and upload data:
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783324017882-bcfef4a3-92d8-4650-aebf-06b2ca9e7cca.png)
 
-被选中的H5AD文件会批量上传到后端，上传速度取决于带宽：
+The selected H5AD files will be uploaded to the backend in batches. The upload speed depends on the bandwidth:
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783324094304-397fea6c-a826-4313-96bc-09077be1f18d.png)
 
-上传完成后可以在左侧文件树看到文件，点击文件可以预览部分文件信息。注意，MAPS-Explore仅展示细胞数量、基因数量、obs信息、obsm信息和uns信息，并且只截取部分数据展示。我们并不推荐您将过多信息保留在H5AD文件中，这会降低上传与加载速度。数据信息预览效果如下：
+After the upload is complete, you can see the files in the file tree on the left. Click on a file to preview part of its information. Note that MAPS-Explore only displays cell count, gene count, obs information, obsm information, and uns information, and only shows a truncated view of the data. We do not recommend keeping too much information in the H5AD file, as this will reduce upload and loading speed. The data information preview effect is as follows:
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783324308757-306eb625-8e8f-4b8a-917a-fbf1a6ca6dba.png)
 
-## （4）数据处理
-该步骤的目的是提升2D和3D可视化效率。我们采用了多种数据加速方式，需要将您的H5AD文件转换为压缩的二进制文件，以保证可视化的流畅加载和低内存负担。您首先需要任意点击一个文件查看其信息，然后点击左下角的Process按钮，在弹出的窗口中选择需要保存的obs标签，并指定切片坐标标签（通常在obsm中）。
+## (4) Data Processing
+The purpose of this step is to improve the efficiency of 2D and 3D visualization. We adopt multiple data acceleration methods and need to convert your H5AD files into compressed binary files to ensure smooth loading and low memory overhead for visualization. First, you need to click on any file to view its information, then click the Process button at the lower left corner. In the popup window, select the obs labels to save, and specify the slice coordinate label (usually in obsm).
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783325240976-8abbef62-3e29-4d16-99c8-117ef94f948d.png)
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783325296353-61cd2e76-173e-4140-b1a4-bb141d8d43ab.png)
 
-我们同时提供了多切片处理功能，你可以统一处理所有切片：  
-<!-- 这是一张图片，ocr 内容为： -->
+We also provide a multi-slice processing feature, allowing you to process all slices uniformly:  
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783325375107-eaf9e043-0c22-44b5-8587-1b012aec2c8f.png)
 
-点击Execute按钮启动Process。处理过程可能会花费一点时间，这取决于你提供的切片大小和多线程设置（可以在Config界面设置）。Process结束后会跳转到2D可视化界面：
+Click the `Execute` button to start `Process`. The processing may take some time, depending on the slice size you provide and the multi-threading settings (can be set in the `Config` interface). After `Process` ends, the system will navigate to the 2D visualization interface:
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783325606741-f650603c-b927-451e-9477-353c0ed37c04.png)
 
-## （5）2D可视化
-<!-- 这是一张图片，ocr 内容为： -->
+## (5) 2D Visualization
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783326020675-7a01234a-ac8e-439a-b6b2-dc9995c8fb9f.png)
 
-2D可视化界面包含了多个可视化功能，对于顶部导航栏：
+The 2D visualization interface includes multiple visualization features. For the top navigation bar:
 
-+ SLICE 下拉框：用于切换切片文件
-+ <!-- 这是一张图片，ocr 内容为： -->
++ SLICE dropdown: Used to switch slice files.
++ <!-- This is an image, ocr content: -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783327142958-ca94199d-0328-4989-983c-53eab728af7f.png)
-+ GENE 输入框：用于搜索基因列表
-+ <!-- 这是一张图片，ocr 内容为： -->
++ GENE input box: Used to search the gene list.
++ <!-- This is an image, ocr content: -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783327284018-a3573933-92cc-4fb5-b27d-81ef3aae88ab.png)
-+ LABEL 下拉框：用于切换细胞标签
-+ <!-- 这是一张图片，ocr 内容为： -->
++ LABEL dropdown: Used to switch cell labels.
++ <!-- This is an image, ocr content: -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783327303530-0eb75924-c9e8-46ef-a4fe-778ffeb3692e.png)
-+ Apply按钮：当用户改变基因或者细胞标签时，需要点击该按钮实现数据加载，数据加载会花费一定时间，取决于数据大小
-+ <!-- 这是一张图片，ocr 内容为： -->
++ `Apply` button: When the user changes genes or cell labels, this button needs to be clicked to load data. Data loading will take some time, depending on the data size.
++ <!-- This is an image, ocr content: -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783327361170-a7fe6c23-3544-447e-888a-8ee2afcf5e8f.png)
-+ dark/light 按钮：用于切换背景颜色，默认加载黑色背景，可在Config界面设置
-+ <!-- 这是一张图片，ocr 内容为： -->
++ dark/light button: Used to switch the background color. By default, it loads a black background, which can be set in the `Config` interface.
++ <!-- This is an image, ocr content: -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783327388223-80e22b61-bca1-4af2-a613-3a921c90598c.png)
-+ reset 按钮：用于恢复视角，用户可以通过鼠标右键拖拽切片，也可以通过鼠标滚轮进行画面缩放，通过该按钮可以恢复初始视角和缩放比例
-+ 窗口形状按钮：用于切换窗口形状，默认为矩形，点击后切换为正方形，再次点击恢复矩形窗口
-+ <!-- 这是一张图片，ocr 内容为： -->
++ reset button: Used to restore the viewpoint. Users can drag the slice with the right mouse button, and use the mouse wheel to zoom in/out. Clicking this button restores the initial viewpoint and zoom ratio.
++ Window shape button: Used to switch the window shape. The default is rectangle. Click to switch to square; click again to restore the rectangular window.
++ <!-- This is an image, ocr content: -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783327424880-54371a06-15ae-4d06-b95f-f4d32a13b487.png)
-+ 下载按钮：点击可以保存当前窗口到PNG图片，清晰度受屏幕尺寸和放大倍数影响（HD参数，可在Config界面设置，默认2X）
-+ <!-- 这是一张图片，ocr 内容为： -->
++ Download button: Click to save the current window as a PNG image. The clarity is affected by the screen size and zoom factor (HD parameter, can be set in the Config interface, default 2X).
++ <!-- This is an image, ocr content: -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783327470399-306f0950-1eaf-48ae-8fed-646e4a3418a9.png)
 
-对于右侧边栏：
+For the right sidebar:
 
-+ POINT Card：可以改变点的尺寸和透明度
-+ <!-- 这是一张图片，ocr 内容为： -->
++ POINT Card: Can change the size and opacity of points.
++ <!-- This is an image, ocr content: -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783327515163-4d6c3361-6010-41da-90a2-15aaacc60168.png)
-+ LABELS Card：用于设置颜色映射（仅针对类别标签，对于数值类型标签如基因表达值无效），标题右侧的下拉框可以切换配色表（我们提供了5组配色表，可在Config界面设置），右侧三个按钮分别用于”导出配色表“，”全选“和”取消全选“，是下方多选框的快捷操作。下方颜色条目左侧的多选框可以用于控制对应标签的点是否显示，点击颜色矩形还可以切换映射颜色。下方的Apply按钮需要在修改颜色后点击确认实现颜色映射刷新，Reset按钮用于恢复默认颜色映射
-+ <!-- 这是一张图片，ocr 内容为： -->
++ LABELS Card: Used to set the color mapping (only for categorical labels; it does not work for numerical type labels such as gene expression values). The dropdown on the right side of the title can switch the color palette (we provide 5 color palettes, which can be set in the Config interface). The three buttons on the right are used for "Export palette", "Select all", and "Deselect all", which are shortcut operations for the multi-select boxes below. The multi-select boxes on the left side of the color entries below can be used to control whether the points of the corresponding label are displayed. Clicking the color rectangle can also switch the mapping color. The `Apply` button below needs to be clicked after modifying colors to confirm the color mapping refresh, and the `Reset` button is used to restore the default color mapping.
++ <!-- This is an image, ocr content: -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783327562412-fc30cd86-7aba-4a1b-953e-9366079c3c14.png)
-+ <!-- 这是一张图片，ocr 内容为： -->
++ <!-- This is an image, ocr content: -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783327606365-1b4e752f-d971-4f5d-b0fe-5410496eb1b4.png)
-+ ADVANCED FILTER Card：用于多层标签过滤，可以从下拉框选择另一个标签（可能是更主要的细胞类型或区域），从而实现仅显示该区域中的细胞类型
-+ <!-- 这是一张图片，ocr 内容为： -->
++ ADVANCED FILTER Card: Used for multi-level label filtering. You can select another label from the dropdown (possibly a more major cell type or region), so as to only display the cell types within that region.
++ <!-- This is an image, ocr content: -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783327753729-cc4a0456-0019-4cf9-941c-7055e9bb3eae.png)
-+ FLIP Card：用于镜像翻转XY轴坐标
-+ <!-- 这是一张图片，ocr 内容为： -->
++ FLIP Card: Used for mirror flipping of XY axis coordinates.
++ <!-- This is an image, ocr content: -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783327862149-ce9790ef-8b11-4edf-8f4f-cce3ccdb8a81.png)
 
-## （6）全局切片对齐
-你可以通过点击左下角的Global Align按钮发起全局切片对齐任务，并在弹出窗口中指定参与对齐的切片和顺序：
+## (6) Global Slice Alignment
+You can launch a global slice alignment task by clicking the Global Align button at the lower left corner, and specify the slices participating in the alignment and their order in the popup window:
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783328401710-f9f5cc64-6bb1-44e9-ac06-3441ed9d4323.png)
 
-注意，在这里我将adata_55排除在外用于演示后续的插入对齐任务。我指定了batch标签作为切片顺序，这里必须选择真实的切片顺序并且batch列元素应当为数值类型：
+Note that here I excluded `adata_55` for the purpose of demonstrating the subsequent insertion alignment task. I specified the batch label as the slice order; here you must select the actual slice order, and the elements of the batch column should be of numeric type:
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783328479929-86ad8892-33f4-4847-88ae-0d6d57a991a4.png)
 
-项目运行可能会花费一些时间，因为它涉及到数据整合以及坐标对齐计算：
+The alignment task may take some time to run, because it involves data integration and coordinate alignment calculation:
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783329307988-66d205b7-eae4-4f1a-94f7-b7db1c6baf5d.png)
 
-当任务处理完成后会自动打开3D可视化界面：
+When the task is processed, it will automatically open the 3D visualization interface:
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783329405722-31beb487-634a-4be9-a4c0-1af6a6df478b.png)
 
-## （7）3D可视化
-<!-- 这是一张图片，ocr 内容为： -->
+## (7) 3D Visualization
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783329768556-fd3024bc-0412-48e5-b512-659a524ab7ae.png)
 
-3D可视化界面包含了更丰富的可视化功能，对于顶部导航栏：
+The 3D visualization interface includes richer visualization features. For the top navigation bar:
 
-+ ALIGN 下拉框：用于切换对齐模式，如果你没有进行过某种对齐模式而要访问的话会回退到已处理过的模式
-+ <!-- 这是一张图片，ocr 内容为： -->
++ ALIGN dropdown: Used to switch alignment modes. If you have not performed a certain alignment mode but want to access it, it will fall back to a mode that has already been processed.
++ <!-- This is an image, ocr content: -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783329937733-8123aaa8-8682-4c61-8c50-43db3bdef6d7.png)
-+ GENE 输入框：同2D可视化
-+ LABEL 下拉框：同2D可视化
-+ Apply按钮：同2D可视化
-+ dark/light 按钮：同2D可视化
-+ statistics按钮：用于展开额外侧边栏显示统计信息
-+ <!-- 这是一张图片，ocr 内容为： -->
++ GENE input box: Same as 2D visualization.
++ LABEL dropdown: Same as 2D visualization.
++ Apply button: Same as 2D visualization.
++ dark/light button: Same as 2D visualization.
++ statistics button: Used to expand an additional sidebar to display statistical information.
++ <!-- This is an image, ocr content: -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783330300071-6ff53009-07b4-47ac-9604-64bafa35e655.png)
-+ reset 按钮：用于恢复视角，用户可以通过鼠标左键旋转空间，通过鼠标右键拖拽切片，也可以通过鼠标滚轮进行画面缩放，通过该按钮可以恢复初始视角和缩放比例
-+ 窗口形状按钮：同2D可视化
-+ 下载按钮：同2D可视化
++ reset button: Used to restore the viewpoint. Users can rotate the space with the left mouse button, drag the slice with the right mouse button, and use the mouse wheel to zoom in/out. Clicking this button restores the initial viewpoint and zoom ratio.
++ Window shape button: Same as 2D visualization.
++ Download button: Same as 2D visualization.
 
-对于右侧边栏：
+For the right sidebar:
 
-+ POINT Card：同2D可视化
-+ LABELS Card：同2D可视化
-+ ADVANCED FILTER Card：同2D可视化
-+ FILES Card：用于控制对应切片的点是否显示
-+ <!-- 这是一张图片，ocr 内容为： -->
++ POINT Card: Same as 2D visualization.
++ LABELS Card: Same as 2D visualization.
++ ADVANCED FILTER Card: Same as 2D visualization.
++ FILES Card: Used to control whether the points of the corresponding slice are displayed.
++ <!-- This is an image, ocr content: -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783333689608-a07f93f7-bfe2-49e0-9cfb-a23fb15a70fe.png)
-+ Shell Panel：全局体素化面板，选中后会在整个点云外侧生成一个封闭的、平滑的、半透明外壳。这个外壳完全由前端计算得来，并受到切片间距影响。用户可以通过面板修改外壳透明度、扩展距离、轮廓描边以及灯光渲染效果。值得一提的是我们在右侧提供了一个模型下载按钮，方便你导出外壳进行更多自定义渲染用于科研或其他场景
-+ <!-- 这是一张图片，ocr 内容为： -->
++ Shell Panel: The global voxelization panel. Once selected, it will generate a closed, smooth, semi-transparent shell on the outside of the entire point cloud. This shell is entirely computed by the frontend, and is affected by the slice spacing. Users can modify the shell opacity, expansion distance, outline stroke, and lighting rendering effects through the panel. It is worth mentioning that we provide a model download button on the right side, making it convenient to export the shell for further custom rendering in scientific research or other scenarios.
++ <!-- This is an image, ocr content: -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783333734993-ad1c3b2a-9088-4bfe-a3f7-a1d45a91067a.png)
-+ Label Shell Panel：标签体素化面板，选中后会在可见点云外侧生成一个封闭的、平滑的、不透明外壳。这个外壳完全由前端计算得来，并受到切片间距和点密度影响。用户可以通过面板修改外壳的平滑度和过滤范围。我们同样在右侧提供了模型下载按钮。演示图由于切片稀疏，所以无法形成连贯的模型
-+ <!-- 这是一张图片，ocr 内容为： -->
++ Label Shell Panel: The label voxelization panel. Once selected, it will generate a closed, smooth, opaque shell on the outside of the visible point cloud. This shell is entirely computed by the frontend, and is affected by the slice spacing and point density. Users can modify the smoothness and filtering range of the shell through the panel. We also provide a model download button on the right side. Note that due to the low slice density in the demo image, the shell may fail to form a coherent model.
++ <!-- This is an image, ocr content: -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783333641341-d32a1b29-9f62-476d-84a2-202b81e3a565.png)
-+ Auto Rotate Panel：自动旋转面板，选中后可以启动旋转，并调节旋转速度和方向
-+ <!-- 这是一张图片，ocr 内容为： -->
++ Auto Rotate Panel: The auto-rotation panel. Once selected, you can start rotation, and adjust the rotation speed and direction.
++ <!-- This is an image, ocr content: -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783333857313-6971e8a4-9668-470c-b868-fcd7d9e33d45.png)
-+ X Slice Panel：X轴厚板取景器，选中出现立方体空间，在立方体内部的点才会被显示。用户可以通过滑动下方的CENTER滑块调整立方体中心位置，通过THICKNESS滑块调整立方体厚度，通过X-COMPRESSION滑块调整全局x轴缩放。此外我们在标题右侧提供了快捷的x轴坐标翻转、顺时针旋转和自动滑行播放按钮
-+ <!-- 这是一张图片，ocr 内容为： -->
++ X Slice Panel: The X-axis thick slab viewfinder. When selected, a cube space appears, and only points inside the cube will be displayed. Users can adjust the position of the cube center by sliding the CENTER slider below, adjust the cube thickness through the THICKNESS slider, and adjust the global x-axis scaling through the X-COMPRESSION slider. In addition, we provide shortcut buttons for x-axis coordinate flip, clockwise rotation, and automatic slide playback on the right side of the title.
++ <!-- This is an image, ocr content: -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783333986853-926d1807-b0ca-49c9-83e6-6fe7965d0b8f.png)
-+ Y Slice Panel：Y轴厚板取景器，功能与上述一致
-+ <!-- 这是一张图片，ocr 内容为： -->
++ Y Slice Panel: The Y-axis thick slab viewfinder, with the same functionality as above.
++ <!-- This is an image, ocr content: -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783334412511-007993c5-6f62-4a99-b79f-6377503a30d8.png)
-+ Z Slice Panel：Z轴厚板取景器，功能与上述一致。值得一提的是，所有项目默认Z轴缩放为0.3，该设置是为了让切片紧凑便于可视化，可以在Config界面设置
-+ <!-- 这是一张图片，ocr 内容为： -->
++ Z Slice Panel: The Z-axis thick slab viewfinder, with the same functionality as above. It is worth mentioning that all projects by default scale the Z axis to 0.3, which is to make the slices compact for visualization; this setting can be configured in the Config interface.
++ <!-- This is an image, ocr content: -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783334455663-a846effd-57aa-4673-9f51-319b589d81f7.png)
 
-## （8）参考切片对齐
-该对齐模式与全局对齐目标不同，旨在将指定两张切片对齐到一个平面上。你可以通过点击左下角的Ref Align按钮发起参考对齐任务，并在弹出窗口中指定参与对齐的两张切片：
+## (8) Reference Slice Alignment
+This alignment mode has a different goal from global alignment; it aims to align the two specified slices onto the same plane. You can launch a reference alignment task by clicking the Ref Align button at the lower left corner, and specify the two slices participating in the alignment in the popup window:
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783334626484-19d69ad9-51f8-484f-84c6-f2382d646f88.png)
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783334649504-41d81341-c9a6-4638-9fa0-ff5c2ed19c04.png)
 
-处理会消耗一些时间：
+The processing will take some time:
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783334680480-104a8d90-0aae-4758-81ac-1a5308757159.png)
 
-处理结束后会直接跳转到被限制了部分功能的3D可视化窗口：
+After processing is complete, the system will navigate directly to the 3D visualization window with some features restricted:
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783334759512-34d639be-85c0-477f-9ca9-e568eb9f562a.png)
 
-具体来说你被限制仅可以访问这两张切片，并且无法使用体素化、旋转、厚板等功能。
+Specifically, you are restricted to accessing only these two slices, and features such as voxelization, rotation, and thick slab are disabled.
 
-## （9）插入切片对齐
-该对齐模式旨在将指定多张未参与全局对齐的切片整合到已经对齐的全局参考图谱中。你可以通过点击左下角的Impute Align按钮发起插入对齐任务，并在弹出窗口中指定参与对齐的多张切片和插入位置：
+## (9) Insertion Slice Alignment
+This alignment mode aims to integrate multiple specified slices that did not participate in global alignment into the already aligned global reference atlas. You can launch an insertion alignment task by clicking the Impute Align button at the lower left corner, and specify the multiple slices participating in the alignment and the insertion positions in the popup window:
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783335043100-889e251b-da6d-45b3-8a38-31cbddb002fb.png)
 
-你可以选择插入位置，如果你选择Auto-match position，系统会自动为你分配最相似的切片并插到该切片旁边（偏移目标切片z轴+0.5）；如果你选择UNS_atlas_match-First，系统会加载你指定切片的uns信息，并从中提取atlas_match字段下best_atlas_slice_idx目标切片信息。你可以通过设置该字段内容批量指定插入切片位置。而Auto-match position的逻辑也会在该字段写入对应位置信息；此外对于单张切片你可以指定插入位置，系统会插入到目标切片旁边（偏移目标切片z轴+0.5）：
+You can choose the insertion mode. If you select `Auto-match position`, the system will automatically assign the most similar slice and insert it next to that slice (offset by the target slice's z-axis +0.5). If you select `UNS_atlas_match-First`, the system will load the `uns` information of your specified slice, and extract the target slice index from the `best_atlas_slice_idx` entry under the `atlas_match` field. You can batch-specify insertion positions by setting the contents of this field. The `Auto-match position` logic will also write the corresponding position information into this field. In addition, for a single slice, you can manually specify an insertion position, and the system will insert it next to the target slice (offset by the target slice's z-axis +0.5):
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783335467657-983022b8-b101-4255-9951-8b9770cb6b39.png)
 
-插入切片时会消耗时间，由切片大小和多线程阈值决定（可以在Config界面设置）
+Inserting slices will consume time, determined by the slice size and the multi-threading threshold (can be set in the `Config` interface).
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783335490175-6b9d3baf-0e62-4c26-bdc9-089142bea0c3.png)
 
-插入完成后会跳转到3D可视化界面，你可以点击顶部的调整按钮打开插入切片的列表
+After the insertion is complete, the system will navigate to the 3D visualization interface. You can click the adjustment button at the top to open the list of inserted slices.
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783335798045-b2078ed8-a1e3-48a4-a88d-a10bebfdf815.png)
 
-在该列表中你可以实现切片的查找、位置调整、保存位置和批量删除已插入切片等操作。
+In this list, you can search slices, adjust positions, save positions, batch delete already-inserted slices, and perform other operations.
 
-## （10）配置界面
-你可以点击左下角的Config按钮进入配置界面
+## (10) Configuration Interface
+You can click the Config button at the lower left corner to enter the configuration interface.
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783335777034-4d7125a9-9535-4304-bde4-d5a2e2d31c35.png)
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783335949191-295f3311-7064-4085-a715-417b36d9f073.png)
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783335977366-1d385c9c-05ee-4d26-ae10-2d0b4008fb7c.png)
 
-配置界面可以预设该项目的默认加载参数，每个项目有独立的配置文件，当用户修改完之后可以点击保存来记住自定义参数面板。具体来说：
+The configuration interface can preset the default loading parameters for the project. Each project has an independent configuration file. After the user finishes modifying, they can click save to remember the custom parameter panel. Specifically:
 
-+ Dark / Light BG 面板：用于指定默认加载2D和3D可视化窗口的背景颜色和散点大小/透明度
-+ Palette 面板：用于配置预设颜色面板，我们提供了五个颜色方案，Palette-1拥有100个预设颜色，Palette-2-5各有20个预设颜色。默认使用Palette-1作为预设颜色方案，如果某类标签超过100中则会开启抖动的面板循环上色（在循环颜色面板同时添加一定量的偏移保证颜色不重复）。此外我们提供了快捷的调色盘功能，通过点击Palette-1右侧的侧边栏按钮可以打开一个图片取景器，你可以上传带颜色的图片，方便使用吸管工具快速配置颜色
-+ <!-- 这是一张图片，ocr 内容为： -->
++ Dark / Light BG panel: Used to specify the background color and scatter size/opacity of the default loaded 2D and 3D visualization windows.
++ Palette panel: Used to configure the preset color palette. We provide five color schemes: Palette-1 has 100 preset colors, and Palettes 2-5 each have 20 preset colors. Palette-1 is used as the default preset color scheme. If a certain category label exceeds 100, the jittering palette cycle coloring will be enabled (adding a certain amount of offset while cycling through the color palette to ensure no repeated colors). In addition, we provide a quick palette function. By clicking the sidebar button on the right side of Palette-1, you can open an image viewfinder, where you can upload an image with colors, making it convenient to use the eyedropper tool to quickly configure colors.
++ <!-- This is an image, ocr content: -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783336575675-42ad2833-c184-403f-8db0-61d1b65a6d65.png)
-+ Data Process面板：Threads参数控制Process的并发线程数量。Max Cells参数用于可视化下采样，目的是减轻前端渲染负担，对于低性能设备（前端访问设备）有帮助。HD Scale参数用于控制图片保存放大倍数，图片分辨率由屏幕分辨率*放大倍数决定，通常1080P分辨率屏幕默认2倍放大已经可以实现较为清晰的成像。需要注意的是由于可视化架构限制，我们无法提供矢量图（如SVG或PDF格式）
-+ View 面板：视图面板包含多个可视化参数预设。XYZ Compress用于控制坐标轴的缩放比例，其中Z轴默认缩放到0.3，目的是使得切片更紧凑；Flip XYZ用于控制坐标镜像，默认关闭；Rot XYZ用于控制坐标旋转，默认0；SHELL面板提供了全局体素化外壳的透明度、扩展范围和轮廓描边；LABELS SHELL提供了三个参数，分别是Tolerance（如果指定标签存在多个独立的簇，他会选择前n%计算）、Smooth（高斯平滑算法迭代次数，迭代次数越高表面越平滑，但是外壳会扩大，并且可能存在外壳不封闭的问题）、Density（过滤掉密度较低的点，保证主体簇的平滑渲染）；AUTO ROTATE用于控制空间自动旋转的速度和方向；LIGHTING用于控制外壳的环境光照，包括Azimuth（水平光角度）、Elevation（垂直光角度）、Intensity（光照强度）、Ambient（环境光强度）、Rim（外壳反光度）
++ Data Process panel: The Threads parameter controls the number of concurrent threads for Process. The Max Cells parameter is used for visualization downsampling, with the purpose of reducing the rendering burden on the frontend, which is helpful for low-performance devices (frontend access devices). The HD Scale parameter is used to control the image saving magnification. The image resolution is determined by the screen resolution × magnification. Typically, a 1080P resolution screen with the default 2× magnification can already achieve relatively clear imaging. Note that due to limitations of the visualization architecture, we cannot provide vector graphics (such as SVG or PDF formats).
++ View panel: The view panel includes multiple visualization parameter presets. XYZ Compress is used to control the scaling ratio of the coordinate axes, where the Z axis is scaled to 0.3 by default, with the purpose of making the slices more compact; Flip XYZ is used to control coordinate mirroring, which is off by default; Rot XYZ is used to control coordinate rotation, with a default of 0; The SHELL panel provides opacity, expansion range, and outline stroke for the global voxelization shell; LABELS SHELL provides three parameters, namely Tolerance (if the specified label has multiple independent clusters, it will select the front n% for calculation), Smooth (the number of iterations of the Gaussian smoothing algorithm; a higher number of iterations results in a smoother surface, but the shell will expand, and there may be a problem of the shell not being closed), and Density (filter out points with low density, ensuring smooth rendering of the main cluster); AUTO ROTATE is used to control the speed and direction of spatial auto-rotation; LIGHTING is used to control the ambient lighting of the shell, including Azimuth (horizontal light angle), Elevation (vertical light angle), Intensity (light intensity), Ambient (ambient light intensity), and Rim (shell reflectivity).
 
-# 4、演示数据
-我们提供了6套演示数据，用户可以通过访问[http://183.175.59.4/maps/](http://183.175.59.4/maps/)查看。
+# 4. Demo Data
+We provide 6 sets of demo data; users can view them by visiting [http://183.175.59.4/maps/](http://183.175.59.4/maps/).
 
-## （1）example_project
-该数据用于创建教程，切片较少，加载迅速，共包含689,539个细胞，全局对齐3D可视化理论加载速度约5秒：
+## (1) example_project
+This dataset is used for creating tutorials. It contains a small number of slices, loads quickly, contains a total of 689,539 cells, and the theoretical loading speed for global aligned 3D visualization is about 5 seconds:
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783337718077-e20419de-fcb1-4095-94d4-281146d8ad76.png)
 
-## （2）demo1_mouse_embro
-该数据来自[Spateo](https://www.cell.com/cell/fulltext/S0092-8674(24)01159-0)（doi: 10.1016/j.cell.2024.10.011）的E11.5天小鼠全胚胎空间转录组测序。包含89张切片和6,918,865个细胞。全局对齐3D可视化理论加载速度约20秒：
+## (2) demo1_mouse_embro
+This data comes from the E11.5 day mouse whole-embryo spatial transcriptomic sequencing by [Spateo](https://www.cell.com/cell/fulltext/S0092-8674(24)01159-0) (doi: 10.1016/j.cell.2024.10.011). It contains 89 slices and 6,918,865 cells. The theoretical loading speed for global aligned 3D visualization is about 20 seconds:
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783338232137-8dbbcf74-6ae3-4da4-88f4-1b5882329b84.png)
 
-## （3）demo2_mouse_brain
-该数据来自[Merfish](https://cellxgene.cziscience.com/collections/0cca8620-8dee-45d0-aef5-23f032a5cf09)（doi: 10.1038/s41586-023-06808-9）平台的小鼠半脑空间转录组测序。包含129张冠状切片和3,698,530个细胞。全局对齐3D可视化理论加载速度约10秒：
+## (3) demo2_mouse_brain
+This data comes from the mouse half-brain spatial transcriptomic sequencing on the [Merfish](https://cellxgene.cziscience.com/collections/0cca8620-8dee-45d0-aef5-23f032a5cf09) (doi: 10.1038/s41586-023-06808-9) platform. It contains 129 coronal slices and 3,698,530 cells. The theoretical loading speed for global aligned 3D visualization is about 10 seconds:
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783338788422-0da5b0aa-ef30-4edf-87a3-2d8ae0d5c69e.png)
 
-## （4）demo3_monkey_brain
-该数据来自[Stereo-seq](https://www.cell.com/cell/fulltext/S0092-8674(23)00679-7)（doi: 10.1016/j.cell.2023.06.009）平台的狨猴全脑皮层空间转录组测序。包含119张切片和30,801,581个细胞。全局对齐3D可视化理论加载速度约60秒：
+## (4) demo3_monkey_brain
+This data comes from the marmoset whole-brain cortex spatial transcriptomic sequencing on the [Stereo-seq](https://www.cell.com/cell/fulltext/S0092-8674(23)00679-7) (doi: 10.1016/j.cell.2023.06.009) platform. It contains 119 slices and 30,801,581 cells. The theoretical loading speed for global aligned 3D visualization is about 60 seconds:
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783339767975-8ef80832-ec28-4a43-ab79-9fb146cfe619.png)
 
-## （5）demo4_monkey_brain
-该数据来自[Stereo-seq](https://www.cell.com/cell/fulltext/S0092-8674(23)00679-7)（doi: 10.1016/j.cell.2023.06.009）平台的狨猴全脑皮层空间转录组测序。包含125张切片和804,294个细胞。全局对齐3D可视化理论加载速度约3秒：
+## (5) demo4_monkey_brain
+This data comes from the marmoset whole-brain cortex spatial transcriptomic sequencing on the [Stereo-seq](https://www.cell.com/cell/fulltext/S0092-8674(23)00679-7) (doi: 10.1016/j.cell.2023.06.009) platform. It contains 125 slices and 804,294 cells. The theoretical loading speed for global aligned 3D visualization is about 3 seconds:
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783339916770-d1262885-b3f0-4d85-926b-9873ed413552.png)
 
-## （6）demo5_intergrated_atlas
-该数据来自18个测序平台或数据集的全脑或半脑空间转录组测序。包含441张切片和804,294个细胞。全局对齐（129张切片，参考图谱）的3D可视化理论加载速度约10秒，插入对齐（441张切片，整合数据）的3D可视化理论加载速度约50秒：
+## (6) demo5_intergrated_atlas
+This data comes from 18 sequencing platforms or datasets of whole-brain or half-brain spatial transcriptomic sequencing. It contains 441 slices and 804,294 cells. The theoretical loading speed for the 3D visualization of global alignment (129 slices, reference atlas) is about 10 seconds, and the theoretical loading speed for the 3D visualization of insertion alignment (441 slices, integrated data) is about 50 seconds:
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783340295212-02da8acd-f970-4910-bba8-c9114b5f5c54.png)
 
-<!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783340241203-760c0959-59a2-4e34-b6fb-ebe3a596e613.png)
-
 
 
