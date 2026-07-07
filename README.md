@@ -271,7 +271,7 @@ This data comes from the marmoset whole-brain cortex spatial transcriptomic sequ
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783339916770-d1262885-b3f0-4d85-926b-9873ed413552.png)
 
 ## (6) demo5_intergrated_atlas
-This data comes from 18 sequencing platforms or datasets of whole-brain or half-brain spatial transcriptomic sequencing. It contains 441 slices and 804,294 cells. The theoretical loading speed for the 3D visualization of global alignment (129 slices, reference atlas) is about 10 seconds, and the theoretical loading speed for the 3D visualization of insertion alignment (441 slices, integrated data) is about 50 seconds:
+This data comes from 18 sequencing platforms or datasets of whole-brain or half-brain spatial transcriptomic sequencing. It contains 441 slices and 21,335,013 cells. The theoretical loading speed for the 3D visualization of global alignment (129 slices, reference atlas) is about 10 seconds, and the theoretical loading speed for the 3D visualization of insertion alignment (441 slices, integrated data) is about 50 seconds:
 
 ![](https://cdn.nlark.com/yuque/0/2026/png/22773386/1783340295212-02da8acd-f970-4910-bba8-c9114b5f5c54.png)
 
